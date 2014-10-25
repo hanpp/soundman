@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:weightSum="1">
+    <Switch
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Soundman service"
+            android:id="@+id/switch_jackService" android:clickable="true" android:checked="true" android:enabled="true"
+            android:onClick="JackServiceSwitch" android:textOn="Enabled" android:textOff="Disabled"
+            android:layout_weight="0.18"/>
+    <Switch android:layout_width="fill_parent" android:layout_height="wrap_content"
+            android:text="Start the soundman service on device boot"
+            android:id="@+id/switch_startonBoot" android:clickable="true" android:checked="true" android:enabled="true"
+            android:onClick="ChangeStartOnBootSetting" android:textOn="Enabled" android:textOff="Disabled"
+            android:layout_weight="0.18" android:layout_gravity="center_horizontal"/>
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Unmute"
+            android:id="@+id/button" android:layout_weight="0.08" android:enabled="true" android:clickable="true"
+            android:onClick="UnMute"/>
+</LinearLayout>
+
