@@ -8,16 +8,16 @@ import android.content.SharedPreferences;
 
 public class BootStart extends BroadcastReceiver {
 
-    public static Intent intent2;
-
     @Override
     public void onReceive(Context context, Intent intent) {
-        //check preferences whether to start the service on boot
-
         SharedPreferences prefs = context.getSharedPreferences("hanpp.soundman", Context.MODE_PRIVATE);
-        if (prefs.getBoolean("autostart", false)) {
-            intent2 = new Intent(context, JackListener.class);
-            context.startService(intent2);
+        if (prefs.getBoolean("autostart", false)) { //check preferences whether to start the service on boot
+            if (Manager.isInitialized()) { //check if manager has been initialized
+                context.startService(Manager.listenerIntent);
+            } else {
+                new Manager(context);
+                context.startService(Manager.listenerIntent);
+            }
         }
     }
 }

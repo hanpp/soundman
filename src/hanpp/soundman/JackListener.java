@@ -11,7 +11,6 @@ import android.media.AudioManager;
 import android.os.IBinder;
 
 public class JackListener extends Service {
-    public static AudioManager mgr;
     int mStartMode;       // indicates how to behave if the service is killed
     IBinder mBinder;      // interface for clients that bind
     boolean mAllowRebind; // indicates whether onRebind should be used
@@ -26,9 +25,9 @@ public class JackListener extends Service {
     @Override
     public void onCreate() {
         // The service is being created
+        Manager.listenerServiceRunning = true; //register it started
         context = getApplicationContext();
         isForeGround = false;
-        mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         mir = new JackIntentReceiver();
         filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(mir, filter); //start the headphone jack listener
@@ -63,8 +62,10 @@ public class JackListener extends Service {
     @Override
     public void onDestroy() {
         // The service is no longer used and is being destroyed
-        mgr.setStreamMute(AudioManager.STREAM_MUSIC, false); //unmute
+        Manager.mgr.setStreamMute(AudioManager.STREAM_MUSIC, false); //unmute
         unregisterReceiver(mir);
+        stopForeground(true);
+        Manager.listenerServiceRunning = false;
     }
 
     public void foreGround(String ContentTitle) {
@@ -76,23 +77,35 @@ public class JackListener extends Service {
         //notifications
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pint = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Notification notif = new Notification.Builder(context)
+        Notification notification = new Notification.Builder(context)
                 .setContentTitle(ContentTitle)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentIntent(pint)
                 .build();
         //send the notification
-        startForeground(myID, notif);
+        startForeground(myID, notification);
     }
 
     public void ChangeStreamMode() {
-        if (mgr.isWiredHeadsetOn()) {
-            //Headset is plugged
-            mgr.setStreamMute(AudioManager.STREAM_MUSIC, false);
+        if (Manager.mgr.isWiredHeadsetOn()) {
+            //Headset is plugged, unmute
+            if (Manager.audioMuted) { //if muted, unmute
+                Manager.audioMuted = false;
+                Manager.mgr.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            } else { //if unmuted then mute and unmute
+                Manager.mgr.setStreamMute(AudioManager.STREAM_MUSIC, true);
+                Manager.mgr.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            }
             foreGround("Headset is plugged in");
         } else {
-            //Headset is unplugged, set silent
-            mgr.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            //Headset is unplugged, mute
+            if (!Manager.audioMuted) { //if unmuted, mute
+                Manager.audioMuted = true;
+                Manager.mgr.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            } else { //if muted then unmute and mute
+                Manager.mgr.setStreamMute(AudioManager.STREAM_MUSIC, false);
+                Manager.mgr.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            }
             foreGround("Headset is unplugged");
         }
     }
