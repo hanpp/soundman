@@ -30,7 +30,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-
         prefs = this.getSharedPreferences("hanpp.soundman", Context.MODE_PRIVATE);
         prefed = prefs.edit();
 
@@ -42,7 +41,7 @@ public class MainActivity extends Activity {
         progb.setVisibility(View.INVISIBLE);
 
         if (!prefs.contains("autostart")) {
-            ChangeStartOnBootSetting(null); //make the autostart setting if it doesn't exist
+            changeStartOnBootSetting(null); //make the autostart setting if it doesn't exist
         }
 
         if (!prefs.getBoolean("autostart", false)) {
@@ -60,7 +59,7 @@ public class MainActivity extends Activity {
         stopbtn.setEnabled(true); //enable the stop button
     }
 
-    public void StartJackService(View v) {
+    public void startJackService(View v) {
         if (!Manager.listenerServiceRunning) {
             startService(Manager.listenerIntent);
             stopbtn.setEnabled(true); //enable the stop button
@@ -71,11 +70,12 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void StopJackService(View v) {
+    public void stopJackService(View v) {
         if (Manager.listenerServiceRunning) {
             stopService(Manager.listenerIntent);
         }
         stopbtn.setEnabled(false); //disable the stop button
+        swb.setEnabled(false);
         waitStopListenerService();
     }
 
@@ -83,6 +83,7 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             startbtn.setEnabled(true); //enable the start button
             progb.setVisibility(View.INVISIBLE);
+            swb.setEnabled(true);
         }
     };
 
@@ -102,13 +103,12 @@ public class MainActivity extends Activity {
         }, 0, 1000);
     }
 
-    public void ChangeStartOnBootSetting(View v) {
-        //change the autostart variable
-        prefed.putBoolean("autostart", swb.isChecked());
-        prefed.apply();
+    public void changeStartOnBootSetting(View v) {
+        //change the autostart variable and save it
+        prefed.putBoolean("autostart", swb.isChecked()).commit();
     }
 
-    public void UnMute(View v) {
+    public void unMute(View v) {
         //unmute button
         Manager.mgr.setStreamMute(AudioManager.STREAM_MUSIC, false);
     }

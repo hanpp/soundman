@@ -14,10 +14,10 @@
                 android:layout_height="48dp"
                 android:text="Start"
                 android:id="@+id/startButton" android:clickable="true" android:enabled="true"
-                android:onClick="StartJackService" android:layout_weight="0.35"/>
+                android:onClick="startJackService" android:layout_weight="0.35"/>
         <Button android:layout_width="wrap_content" android:layout_height="48dp" android:text="Stop"
                 android:id="@+id/stopButton" android:clickable="true" android:enabled="true"
-                android:onClick="StopJackService"
+                android:onClick="stopJackService"
                 android:layout_weight="0.38"/>
         <ProgressBar
                 style="?android:attr/progressBarStyleSmall"
@@ -29,13 +29,13 @@
     <Switch android:layout_width="fill_parent" android:layout_height="wrap_content"
             android:text="Start the soundman service on device boot"
             android:id="@+id/switch_startonBoot" android:clickable="true" android:checked="true" android:enabled="true"
-            android:onClick="ChangeStartOnBootSetting" android:textOn="Enabled" android:textOff="Disabled"
+            android:onClick="changeStartOnBootSetting" android:textOn="Enabled" android:textOff="Disabled"
             android:layout_weight="0.18" android:layout_gravity="center_horizontal"/>
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Unmute"
             android:id="@+id/button" android:layout_weight="0.04" android:enabled="true" android:clickable="true"
-            android:onClick="UnMute"/>
+            android:onClick="unMute"/>
 </LinearLayout>
 

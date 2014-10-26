@@ -14,7 +14,7 @@ public class JackListener extends Service {
     int mStartMode;       // indicates how to behave if the service is killed
     IBinder mBinder;      // interface for clients that bind
     boolean mAllowRebind; // indicates whether onRebind should be used
-    private JackIntentReceiver mir;
+    private jackIntentReceiver mir;
     private IntentFilter filter;
 
     private int myID;
@@ -28,7 +28,7 @@ public class JackListener extends Service {
         Manager.listenerServiceRunning = true; //register it started
         context = getApplicationContext();
         isForeGround = false;
-        mir = new JackIntentReceiver();
+        mir = new jackIntentReceiver();
         filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(mir, filter); //start the headphone jack listener
     }
@@ -37,7 +37,7 @@ public class JackListener extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // The service is starting, due to a call to startService()
         myID = startId;
-        ChangeStreamMode(); //set initial audio mode
+        changeStreamMode(); //set initial audio mode
         return mStartMode;
     }
 
@@ -86,7 +86,7 @@ public class JackListener extends Service {
         startForeground(myID, notification);
     }
 
-    public void ChangeStreamMode() {
+    public void changeStreamMode() {
         if (Manager.mgr.isWiredHeadsetOn()) {
             //Headset is plugged, unmute
             if (Manager.audioMuted) { //if muted, unmute
@@ -110,10 +110,10 @@ public class JackListener extends Service {
         }
     }
 
-    public class JackIntentReceiver extends BroadcastReceiver {
+    public class jackIntentReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ChangeStreamMode();
+            changeStreamMode();
         }
     }
 }

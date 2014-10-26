@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 
 
 public class BootStart extends BroadcastReceiver {
-
     @Override
     public void onReceive(Context context, Intent intent) {
         SharedPreferences prefs = context.getSharedPreferences("hanpp.soundman", Context.MODE_PRIVATE);
