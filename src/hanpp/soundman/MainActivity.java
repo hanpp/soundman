@@ -9,15 +9,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends Activity {
 
-    private Switch swb;
+    private CheckBox swb;
     private SharedPreferences prefs;
     private SharedPreferences.Editor prefed;
     private Button startbtn;
@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         prefs = this.getSharedPreferences("hanpp.soundman", Context.MODE_PRIVATE);
         prefed = prefs.edit();
 
-        swb = (Switch) findViewById(R.id.switch_startonBoot);
+        swb = (CheckBox) findViewById(R.id.checkBox_startonBoot);
         startbtn = (Button) findViewById(R.id.startButton);
         stopbtn = (Button) findViewById(R.id.stopButton);
         progb = (ProgressBar) findViewById(R.id.progressBar);
@@ -80,10 +80,19 @@ public class MainActivity extends Activity {
     }
 
     final Handler handler = new Handler() {
+        @Override
         public void handleMessage(Message msg) {
-            startbtn.setEnabled(true); //enable the start button
-            progb.setVisibility(View.INVISIBLE);
-            swb.setEnabled(true);
+            switch (msg.arg1) {
+                case 0: //re-enable buttons after service has stopped
+                    progb.setVisibility(View.INVISIBLE);
+                    startbtn.setEnabled(true); //enable the start button
+                    swb.setEnabled(true);
+                    break;
+                case 1: //re-enable the checkbox after the setting has been saved
+                    swb.setEnabled(true);
+                    break;
+                default:
+            }
         }
     };
 
@@ -96,7 +105,9 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 if (!Manager.listenerServiceRunning) {
-                    handler.sendMessage(new Message());
+                    Message msg = new Message();
+                    msg.arg1 = 0;
+                    handler.sendMessage(msg);
                     cancel();
                 }
             }
@@ -105,7 +116,23 @@ public class MainActivity extends Activity {
 
     public void changeStartOnBootSetting(View v) {
         //change the autostart variable and save it
+        final Boolean oldValue = prefs.getBoolean("autostart", false);
         prefed.putBoolean("autostart", swb.isChecked()).commit();
+
+        //disable the checkbox and wait until the value is saved
+        swb.setEnabled(false);
+        final Timer timerWait2 = new Timer();
+        timerWait2.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (prefs.getBoolean("autostart", false) != oldValue) {
+                    Message msg = new Message();
+                    msg.arg1 = 1;
+                    handler.sendMessage(msg);
+                    cancel();
+                }
+            }
+        }, 0, 1000);
     }
 
     public void unMute(View v) {
