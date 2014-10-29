@@ -35,7 +35,7 @@ public class JackListener extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // The service is starting, due to a call to startService()
-        Manager.listenerServiceRunning = true; //register it started
+        Manager.listenerServiceRunning = true; //register the service started
         myID = startId;
         changeStreamMode(); //set initial audio mode
         return mStartMode;

@@ -122,8 +122,7 @@ public class MainActivity extends Activity {
         public void handleMessage(Message msg) {
             progb.setVisibility(View.INVISIBLE); //hide the loading circle
             switch (msg.arg1) {
-                case 0:
-                    //re-enable stop button after service has started
+                case 0://re-enable stop button after service has started
                     stopbtn.setEnabled(true);
                     swb.setEnabled(true);
                     break;
