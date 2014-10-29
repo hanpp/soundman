@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
@@ -7,36 +7,37 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="58dp"
+            android:layout_height="wrap_content"
             android:weightSum="1">
         <Button
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
                 android:text="Start"
                 android:id="@+id/startButton" android:clickable="true" android:enabled="true"
-                android:onClick="startJackService" android:layout_weight="0.35"/>
-        <Button android:layout_width="wrap_content" android:layout_height="48dp" android:text="Stop"
-                android:id="@+id/stopButton" android:clickable="true" android:enabled="true"
-                android:onClick="stopJackService"
-                android:layout_weight="0.38"/>
+                android:onClick="startJackService" android:layout_weight="0.5" android:layout_gravity="left"/>
         <ProgressBar
                 style="?android:attr/progressBarStyleSmall"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:id="@+id/progressBar" android:indeterminate="true"
-                android:indeterminateOnly="true"/>
+                android:indeterminateOnly="true"
+                android:layout_gravity="center_horizontal" android:visibility="invisible"/>
+        <Button android:layout_width="fill_parent" android:layout_height="match_parent" android:text="Stop"
+                android:id="@+id/stopButton" android:clickable="true" android:enabled="true"
+                android:onClick="stopJackService"
+                android:layout_gravity="right" android:layout_weight="0.5"/>
     </LinearLayout>
-    <CheckBox
-            android:layout_width="278dp"
-            android:layout_height="wrap_content"
-            android:text="Start soundman on device boot"
-            android:id="@+id/checkBox_startonBoot" android:checked="true" android:layout_weight="0.07"
-            android:enabled="true" android:clickable="true" android:onClick="changeStartOnBootSetting"/>
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Unmute"
             android:id="@+id/button" android:layout_weight="0.04" android:enabled="true" android:clickable="true"
             android:onClick="unMute"/>
-</LinearLayout>
+    <CheckBox
+            android:layout_width="278dp"
+            android:layout_height="wrap_content"
+            android:text="Start soundman on device boot"
+            android:id="@+id/checkBox_startonBoot" android:checked="true" android:layout_weight="0.07"
+            android:enabled="true" android:clickable="true" android:onClick="changeStartOnBootSetting"/>
+</GridLayout>
 

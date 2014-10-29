@@ -25,7 +25,6 @@ public class JackListener extends Service {
     @Override
     public void onCreate() {
         // The service is being created
-        Manager.listenerServiceRunning = true; //register it started
         context = getApplicationContext();
         isForeGround = false;
         mir = new jackIntentReceiver();
@@ -36,6 +35,7 @@ public class JackListener extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // The service is starting, due to a call to startService()
+        Manager.listenerServiceRunning = true; //register it started
         myID = startId;
         changeStreamMode(); //set initial audio mode
         return mStartMode;
