@@ -115,12 +115,12 @@ public class MainActivity extends Activity {
     }
 
     public void changeStartOnBootSetting(View v) {
+        //disable the checkbox
+        swb.setEnabled(false);
         //change the autostart variable and save it
         final Boolean oldValue = prefs.getBoolean("autostart", false);
         prefed.putBoolean("autostart", swb.isChecked()).commit();
-
-        //disable the checkbox and wait until the value is saved
-        swb.setEnabled(false);
+        //wait until the value is saved
         final Timer timerWait2 = new Timer();
         timerWait2.scheduleAtFixedRate(new TimerTask() {
             @Override
