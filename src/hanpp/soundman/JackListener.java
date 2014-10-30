@@ -20,13 +20,10 @@ public class JackListener extends Service {
     private int myID;
     private Context context;
 
-    private Boolean isForeGround;
-
     @Override
     public void onCreate() {
         // The service is being created
         context = getApplicationContext();
-        isForeGround = false;
         mir = new jackIntentReceiver();
         filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(mir, filter); //start the headphone jack listener
@@ -69,11 +66,6 @@ public class JackListener extends Service {
     }
 
     public void foreGround(String ContentTitle) {
-        if (isForeGround) {
-            stopForeground(true);
-        }
-        isForeGround = true;
-
         //notifications
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pint = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
