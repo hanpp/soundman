@@ -78,13 +78,16 @@ public class JackListener extends Service {
                 .setContentIntent(pint)
                 .build();
         if (isForeground) { //check if a notification has already been created
-            if (notificationManager == null) {
+            if (notificationManager == null) { //create a new notification if it doesn't exist
+                startForeground(notificationID, notification);
                 notificationManager = (NotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+            } else { //change the notification if a notification exists
+                notificationManager.notify(notificationID, notification);
             }
-            notificationManager.notify(notificationID, notification); //change the notification if a notification exists
         } else {
             startForeground(notificationID, notification); //create a new notification
             notificationManager = (NotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+            isForeground = true;
         }
     }
 
