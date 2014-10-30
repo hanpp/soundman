@@ -1,6 +1,7 @@
 package hanpp.soundman;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -17,8 +18,11 @@ public class JackListener extends Service {
     private jackIntentReceiver mir;
     private IntentFilter filter;
 
-    private int myID;
+    private int notificationID = 1;
     private Context context;
+
+    private NotificationManager notificationManager;
+    private boolean isForeground = false;
 
     @Override
     public void onCreate() {
@@ -33,7 +37,6 @@ public class JackListener extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // The service is starting, due to a call to startService()
         Manager.listenerServiceRunning = true; //register the service started
-        myID = startId;
         changeStreamMode(); //set initial audio mode
         return mStartMode;
     }
@@ -74,8 +77,15 @@ public class JackListener extends Service {
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentIntent(pint)
                 .build();
-        //send the notification
-        startForeground(myID, notification);
+        if (isForeground) { //check if a notification has already been created
+            if (notificationManager == null) {
+                notificationManager = (NotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+            }
+            notificationManager.notify(notificationID, notification); //change the notification if a notification exists
+        } else {
+            startForeground(notificationID, notification); //create a new notification
+            notificationManager = (NotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+        }
     }
 
     public void changeStreamMode() {
